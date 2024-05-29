@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 
-# Definicja klasy Neuron (już dostarczona)
+
 class Neuron:
     def __init__(self, n_inputs, bias = 0., weights = None):
         self.b = bias
@@ -14,11 +14,10 @@ class Neuron:
     def _f(self, x): #activation function (here: leaky_relu)
         return max(x*.1, x)
 
-    def __call__(self, xs): #calculate the neuron's output: multiply the inputs with the weights and sum the values together, add the bias value,
-                            # then transform the value via an activation function
+    def __call__(self, xs): 
         return self._f(xs @ self.ws + self.b) #Mnozenie macierzy @
 
-# Definicja klasy dla warstwy sieci neuronowej
+
 class NeuralLayer:
     def __init__(self, n_inputs, n_neurons):
         self.neurons = [Neuron(n_inputs) for _ in range(n_neurons)] # towrzy warstwe z n nuronys
@@ -48,7 +47,7 @@ def visualize_network(structure):
         for j in range(layer_size):
             neuron_name = f'Layer {i + 1} - Neuron {j + 1}'
             G.add_node(neuron_name)
-            subset_keys[neuron_name] = i  # Przypisanie węzła do warstwy
+            subset_keys[neuron_name] = i 
         if i > 0:
             previous_layer_size = structure[i - 1]
             for prev_j in range(previous_layer_size):
@@ -57,17 +56,14 @@ def visualize_network(structure):
                     curr_neuron = f'Layer {i + 1} - Neuron {curr_j + 1}'
                     G.add_edge(prev_neuron, curr_neuron)
 
-    # Przygotowanie struktury subset_keys do użycia w multipartite_layout
     subsets = {}
     for node, subset in subset_keys.items():
         if subset not in subsets:
             subsets[subset] = []
         subsets[subset].append(node)
 
-    pos = nx.multipartite_layout(G, subset_key=subsets)  # Poprawne użycie subset_key
+    pos = nx.multipartite_layout(G, subset_key=subsets)  
     nx.draw(G, pos, with_labels=True)
     plt.show()
 
-
-# Wizualizacja sieci
 visualize_network(network_structure)
